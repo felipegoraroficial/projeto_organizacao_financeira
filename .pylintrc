@@ -1,5 +1,5 @@
 [MASTER]
-load-plugins=pylint_django
+load-plugins=
 
 [MESSAGES CONTROL]
 disable=
