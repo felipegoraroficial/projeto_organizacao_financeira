@@ -1,0 +1,3 @@
+def default_test():
+    result = 1
+    assert result == 1
