@@ -1,16 +1,19 @@
 from ..connection import get_connection
 
+
 def init_categories():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS categories (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT UNIQUE NOT NULL,
             tipo TEXT NOT NULL
         )
-    """)
+    """
+    )
 
     cursor.execute("SELECT COUNT(*) FROM categories")
     if cursor.fetchone()[0] == 0:
@@ -27,8 +30,7 @@ def init_categories():
         ]
 
         cursor.executemany(
-            "INSERT INTO categories (name, tipo) VALUES (?, ?)",
-            default_categories
+            "INSERT INTO categories (name, tipo) VALUES (?, ?)", default_categories
         )
 
     conn.commit()

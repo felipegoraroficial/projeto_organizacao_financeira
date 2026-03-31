@@ -1,5 +1,6 @@
 from ..connection import get_connection
 
+
 def delete_category(name):
     conn = get_connection()
     cursor = conn.cursor()

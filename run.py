@@ -1,14 +1,9 @@
 import streamlit as st
 
-from app.database import (
-    init_transactions,
-    init_categories,
-    init_saldos
-)
-
+from app.dashboard.view.dashboard_view import render_dashboard
+from app.database import init_categories, init_saldos, init_transactions
 from app.functionality.categoria.categoria_view import render_categorias
 from app.functionality.lancamentos.lancamentos_view import render_lancamentos
-from app.dashboard.view.dashboard_view import render_dashboard
 
 
 def main():
@@ -22,11 +17,9 @@ def main():
     st.title("💰 Painel de Organização Financeira Pessoal")
 
     # Abas principais
-    aba_dashboard, aba_lancamentos, aba_categorias = st.tabs([
-        "📊 Dashboard",
-        "📝 Lançamentos",
-        "🗂️ Categorias"
-    ])
+    aba_dashboard, aba_lancamentos, aba_categorias = st.tabs(
+        ["📊 Dashboard", "📝 Lançamentos", "🗂️ Categorias"]
+    )
 
     with aba_dashboard:
         render_dashboard()

@@ -1,10 +1,12 @@
 from ..connection import get_connection
 
+
 def init_transactions():
     conn = get_connection()
     cursor = conn.cursor()
 
-    cursor.execute("""
+    cursor.execute(
+        """
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date TEXT NOT NULL,
@@ -17,7 +19,8 @@ def init_transactions():
             parcelas INTEGER DEFAULT 1,
             data_pagamento TEXT
         )
-    """)
+    """
+    )
 
     conn.commit()
     conn.close()

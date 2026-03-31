@@ -1,5 +1,6 @@
-import streamlit as st
 import plotly.express as px
+import streamlit as st
+
 
 def preparar_grafico_despesas(df_mes):
     st.markdown("### Distribuição de Despesas por Categoria")
@@ -11,9 +12,6 @@ def preparar_grafico_despesas(df_mes):
         return
 
     fig_cat = px.pie(
-        df_cat,
-        names="Categoria",
-        values="Valor",
-        title="Despesas por Categoria"
+        df_cat, names="Categoria", values="Valor", title="Despesas por Categoria"
     )
     st.plotly_chart(fig_cat, use_container_width=True)

@@ -1,5 +1,6 @@
 from app.database import get_saldo_inicial, set_saldo_inicial
 
+
 def calcular_saldo_anterior(df, ano_sel, mes_sel):
 
     # CASO 1 — Nenhum filtro aplicado
@@ -37,7 +38,6 @@ def calcular_saldo_anterior(df, ano_sel, mes_sel):
 
         return receitas - despesas
 
-
     # CASO 3 — Ano + mês filtrados (sua lógica original)
     ano_atual = int(ano_sel)
     mes_atual = int(mes_sel)
@@ -55,10 +55,7 @@ def calcular_saldo_anterior(df, ano_sel, mes_sel):
 
     saldo_inicial_mes_ant = get_saldo_inicial(ano_ant, mes_ant)
 
-    df_mes_ant = df[
-        (df["Data"].dt.year == ano_ant) &
-        (df["Data"].dt.month == mes_ant)
-    ]
+    df_mes_ant = df[(df["Data"].dt.year == ano_ant) & (df["Data"].dt.month == mes_ant)]
 
     total_rec_ant = df_mes_ant[df_mes_ant["Tipo"] == "Receita"]["Valor"].sum()
     total_desp_ant = df_mes_ant[df_mes_ant["Tipo"] == "Despesa"]["Valor"].sum()

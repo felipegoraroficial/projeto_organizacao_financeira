@@ -1,5 +1,6 @@
-import streamlit as st
 import plotly.express as px
+import streamlit as st
+
 
 def preparar_grafico_evolucao(df_mes):
     st.markdown("### Evolução ao longo do tempo (Visão Mensal)")
@@ -16,9 +17,7 @@ def preparar_grafico_evolucao(df_mes):
     )
 
     df_plot["Label"] = (
-        df_plot["Mes"].astype(str).str.zfill(2)
-        + "/"
-        + df_plot["Ano"].astype(str)
+        df_plot["Mes"].astype(str).str.zfill(2) + "/" + df_plot["Ano"].astype(str)
     )
 
     fig_bar = px.bar(

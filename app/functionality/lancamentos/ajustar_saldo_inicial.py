@@ -1,5 +1,7 @@
-import streamlit as st
 from datetime import datetime
+
+import streamlit as st
+
 from app.database import set_saldo_inicial
 
 

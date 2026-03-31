@@ -1,5 +1,6 @@
-import streamlit as st
 from datetime import datetime
+
+import streamlit as st
 from dateutil.relativedelta import relativedelta
 
 from app.database import (
@@ -25,11 +26,7 @@ def render_adicionar_lancamento():
 
     # 🔥 AGORA FUNCIONA: fora do form, atualiza dinamicamente
     categorias_filtradas = categorias_por_tipo.get(tipo, [])
-    category = st.selectbox(
-        "Categoria",
-        categorias_filtradas,
-        key=f"categoria_{tipo}"
-    )
+    category = st.selectbox("Categoria", categorias_filtradas, key=f"categoria_{tipo}")
 
     with st.form("form_lancamento"):
         description = st.text_input("Descrição")

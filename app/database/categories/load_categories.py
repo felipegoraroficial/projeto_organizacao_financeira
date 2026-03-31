@@ -1,5 +1,6 @@
 from ..connection import get_connection
 
+
 def load_categories():
     conn = get_connection()
     cursor = conn.cursor()

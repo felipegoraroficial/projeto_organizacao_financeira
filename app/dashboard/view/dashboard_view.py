@@ -1,25 +1,35 @@
-import streamlit as st
 import pandas as pd
-
-from app.database import load_transactions
+import streamlit as st
 
 from app.dashboard.utils import (
-    filtrar_por_periodo,
     calcular_saldo_anterior,
+    filtrar_por_periodo,
     preparar_grafico_despesas,
-    preparar_grafico_receitas,
     preparar_grafico_evolucao,
+    preparar_grafico_receitas,
 )
+from app.database import load_transactions
 
 
 def render_dashboard():
     st.header("📊 Visão Geral")
 
     data = load_transactions()
-    df = pd.DataFrame(data, columns=[
-        "ID", "Data", "Tipo", "Categoria", "Descrição", "Valor",
-        "Status", "Recorrente", "Parcelas", "DataPagamento"
-    ])
+    df = pd.DataFrame(
+        data,
+        columns=[
+            "ID",
+            "Data",
+            "Tipo",
+            "Categoria",
+            "Descrição",
+            "Valor",
+            "Status",
+            "Recorrente",
+            "Parcelas",
+            "DataPagamento",
+        ],
+    )
 
     if df.empty:
         st.info("Nenhum dado cadastrado ainda.")

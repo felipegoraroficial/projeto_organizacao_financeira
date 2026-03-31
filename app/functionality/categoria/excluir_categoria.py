@@ -1,5 +1,7 @@
 import streamlit as st
-from app.database import load_categories, delete_category
+
+from app.database import delete_category, load_categories
+
 
 def render_excluir_categoria():
     categorias = load_categories()
