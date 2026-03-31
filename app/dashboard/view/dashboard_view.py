@@ -1,18 +1,14 @@
 import streamlit as st
 import pandas as pd
-from datetime import datetime
 
+from app.database import load_transactions
 
-from app.database_functions import (
-    load_transactions,
-    set_saldo_inicial
-)
-
-from .dashboard_utils import (
+from app.dashboard.utils import (
     filtrar_por_periodo,
     calcular_saldo_anterior,
-    preparar_grafico_categorias,
-    preparar_grafico_evolucao
+    preparar_grafico_despesas,
+    preparar_grafico_receitas,
+    preparar_grafico_evolucao,
 )
 
 
@@ -22,7 +18,7 @@ def render_dashboard():
     data = load_transactions()
     df = pd.DataFrame(data, columns=[
         "ID", "Data", "Tipo", "Categoria", "Descrição", "Valor",
-        "Status", "Recorrente", "Parcelas"
+        "Status", "Recorrente", "Parcelas", "DataPagamento"
     ])
 
     if df.empty:
@@ -50,32 +46,6 @@ def render_dashboard():
     saldo_anterior = calcular_saldo_anterior(df, ano_sel, mes_sel)
 
     # -----------------------------
-    # AJUSTE MANUAL DO SALDO
-    # -----------------------------
-    st.markdown("### Ajustar saldo inicial do mês")
-
-    colA, colB, colC = st.columns(3)
-
-    ano_saldo = colA.number_input(
-        "Ano",
-        min_value=2000,
-        max_value=2100,
-        value=int(ano_sel) if ano_sel != "Todos" else datetime.now().year,
-    )
-    mes_saldo = colB.number_input(
-        "Mês",
-        min_value=1,
-        max_value=12,
-        value=int(mes_sel) if mes_sel != "Todos" else datetime.now().month,
-    )
-    valor_saldo = colC.number_input("Saldo inicial", format="%.2f")
-
-    if st.button("Salvar saldo inicial"):
-        set_saldo_inicial(ano_saldo, mes_saldo, valor_saldo)
-        st.success("Saldo inicial atualizado!")
-        st.rerun()
-
-    # -----------------------------
     # MÉTRICAS
     # -----------------------------
     col1, col2, col3, col4 = st.columns(4)
@@ -91,9 +61,14 @@ def render_dashboard():
     col4.metric("Saldo Acumulado", f"R$ {saldo_acumulado:,.2f}")
 
     # -----------------------------
-    # GRÁFICO DE CATEGORIAS
+    # GRÁFICO DE RECEITA
     # -----------------------------
-    preparar_grafico_categorias(df_mes)
+    preparar_grafico_receitas(df_mes)
+
+    # -----------------------------
+    # GRÁFICO DE DESPESA
+    # -----------------------------
+    preparar_grafico_despesas(df_mes)
 
     # -----------------------------
     # EVOLUÇÃO AO LONGO DO TEMPO
