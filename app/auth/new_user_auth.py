@@ -1,13 +1,15 @@
 import hashlib
 import sqlite3
 
+from app.database.connection import get_connection
+
 
 def hash_senha(senha: str) -> str:
     return hashlib.sha256(senha.encode()).hexdigest()
 
 
 def cadastrar_usuario(nome: str, email: str, senha: str):
-    conn = sqlite3.connect("database.db")
+    conn = get_connection()
     cursor = conn.cursor()
 
     senha_hash = hash_senha(senha)

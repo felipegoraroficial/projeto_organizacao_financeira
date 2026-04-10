@@ -1,5 +1,6 @@
 import hashlib
-import sqlite3
+
+from app.database.connection import get_connection
 
 
 def hash_senha(senha: str) -> str:
@@ -7,7 +8,7 @@ def hash_senha(senha: str) -> str:
 
 
 def atualizar_senha(email: str, nova_senha: str):
-    conn = sqlite3.connect("database.db")
+    conn = get_connection()
     cursor = conn.cursor()
 
     senha_hash = hash_senha(nova_senha)
