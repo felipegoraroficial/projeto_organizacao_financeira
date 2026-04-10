@@ -1,3 +1,4 @@
+data/*.db
 venv
 .mypy_cache
 .pytest_cache

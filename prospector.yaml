@@ -1,0 +1,12 @@
+strictness: medium
+doc-warnings: false
+test-warnings: false
+
+pylint:
+  disable:
+    - django-not-available
+  load-plugins: []
+
+ignore-patterns:
+  - migrations
+  - venv
