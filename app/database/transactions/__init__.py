@@ -3,6 +3,7 @@ from .init_transactions import init_transactions
 from .insert_transaction import insert_transaction
 from .load_transactions import load_transactions
 from .marcar_como_pago import marcar_como_pago
+from .update_transaction import update_transaction
 
 __all__ = [
     "init_transactions",
@@ -10,4 +11,5 @@ __all__ = [
     "load_transactions",
     "delete_transaction",
     "marcar_como_pago",
+    "update_transaction",
 ]

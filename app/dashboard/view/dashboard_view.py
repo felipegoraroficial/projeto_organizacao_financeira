@@ -3,6 +3,8 @@ import streamlit as st
 
 from app.dashboard.utils import (
     calcular_saldo_anterior,
+    calcular_saldos,
+    exportar_excel,
     filtrar_por_periodo,
     preparar_grafico_despesas,
     preparar_grafico_evolucao,
@@ -12,9 +14,20 @@ from app.database import load_transactions
 
 
 def render_dashboard():
+
+    # 🔐 Verificação de login
+    if "usuario" not in st.session_state:
+        st.switch_page("app/auth/login_view.py")
+
+    # 🔄 Botão de refresh (agora no lugar certo)
+    if st.button("🔄 Atualizar Dashboard"):
+        st.rerun()
+
     st.header("📊 Visão Geral")
 
-    data = load_transactions()
+    usuario_id = st.session_state["usuario"]["id"]
+    data = load_transactions(usuario_id)
+
     df = pd.DataFrame(
         data,
         columns=[
@@ -56,31 +69,80 @@ def render_dashboard():
     saldo_anterior = calcular_saldo_anterior(df, ano_sel, mes_sel)
 
     # -----------------------------
-    # MÉTRICAS
+    # CÓPIA PARA CÁLCULOS (NÃO AFETA GRÁFICOS)
     # -----------------------------
-    col1, col2, col3, col4 = st.columns(4)
+    df_calc = df_mes.copy()
+    df_calc["Tipo"] = df_calc["Tipo"].str.lower()
+    df_calc["Status"] = df_calc["Status"].str.lower()
 
-    total_receitas = df_mes[df_mes["Tipo"] == "Receita"]["Valor"].sum()
-    total_despesas = df_mes[df_mes["Tipo"] == "Despesa"]["Valor"].sum()
-    saldo = total_receitas - total_despesas
-    saldo_acumulado = saldo_anterior + saldo
+    resultados = calcular_saldos(df_calc, saldo_anterior)
 
-    col1.metric("Saldo Inicial (período anterior)", f"R$ {saldo_anterior:,.2f}")
-    col2.metric("Receitas", f"R$ {total_receitas:,.2f}")
-    col3.metric("Despesas", f"R$ {total_despesas:,.2f}")
-    col4.metric("Saldo Acumulado", f"R$ {saldo_acumulado:,.2f}")
+    # -----------------------------
+    # MÉTRICAS ORGANIZADAS E ALINHADAS
+    # -----------------------------
+
+    st.subheader("Visão Geral")
+
+    with st.container():
+        col1, col2, col3 = st.columns([1, 1, 1])
+        col1.metric("Saldo Inicial", f"R$ {saldo_anterior:,.2f}")
+        col2.metric("Saldo Final (realizado)", f"R$ {resultados['saldo_final']:,.2f}")
+        col3.metric(
+            "Saldo Previsto (projetado)", f"R$ {resultados['saldo_previsto']:,.2f}"
+        )
+
+    st.markdown("---")
 
     # -----------------------------
     # GRÁFICO DE RECEITA
     # -----------------------------
+
+    st.subheader("Receitas")
+
+    with st.container():
+        col4, col5 = st.columns([1, 1])
+        col4.metric("Receitas Pagas", f"R$ {resultados['receitas_pagas']:,.2f}")
+        col5.metric("Receitas Pendentes", f"R$ {resultados['receitas_pendentes']:,.2f}")
+
     preparar_grafico_receitas(df_mes)
+
+    st.markdown("---")
 
     # -----------------------------
     # GRÁFICO DE DESPESA
     # -----------------------------
+
+    st.subheader("Despesas")
+
+    with st.container():
+        col6, col7 = st.columns([1, 1])
+        col6.metric("Despesas Pagas", f"R$ {resultados['despesas_pagas']:,.2f}")
+        col7.metric("Despesas Pendentes", f"R$ {resultados['despesas_pendentes']:,.2f}")
+
     preparar_grafico_despesas(df_mes)
+
+    st.markdown("---")
 
     # -----------------------------
     # EVOLUÇÃO AO LONGO DO TEMPO
     # -----------------------------
     preparar_grafico_evolucao(df_mes)
+
+    # -----------------------------
+    # TABELA PARA EXPORTAÇÃO
+    # -----------------------------
+
+    st.markdown("---")
+
+    st.subheader("Tabela de Lançamentos do Período")
+
+    excel_file = exportar_excel(df_mes)
+
+    st.download_button(
+        label="📥 Baixar tabela em Excel",
+        data=excel_file,
+        file_name="lancamentos_filtrados.xlsx",
+        mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+
+    st.dataframe(df_mes, use_container_width=True)

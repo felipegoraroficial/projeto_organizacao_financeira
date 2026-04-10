@@ -9,15 +9,17 @@ def init_transactions():
         """
         CREATE TABLE IF NOT EXISTS transactions (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            date TEXT NOT NULL,
-            type TEXT NOT NULL,
-            category TEXT NOT NULL,
-            description TEXT,
-            value REAL NOT NULL,
-            status TEXT DEFAULT 'pago',
-            recorrente INTEGER DEFAULT 0,
-            parcelas INTEGER DEFAULT 1,
-            data_pagamento TEXT
+            usuario_id INTEGER NOT NULL,
+            data TEXT NOT NULL,
+            tipo TEXT NOT NULL,
+            categoria TEXT NOT NULL,
+            descricao TEXT,
+            valor REAL NOT NULL,
+            status TEXT NOT NULL,
+            recorrente TEXT,
+            parcelas INTEGER,
+            data_pagamento TEXT,
+            FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
         )
     """
     )

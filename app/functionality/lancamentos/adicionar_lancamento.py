@@ -24,9 +24,10 @@ def render_adicionar_lancamento():
     date = col1.date_input("Data")
     tipo = col2.selectbox("Tipo", ["Receita", "Despesa"])
 
-    # 🔥 AGORA FUNCIONA: fora do form, atualiza dinamicamente
     categorias_filtradas = categorias_por_tipo.get(tipo, [])
     category = st.selectbox("Categoria", categorias_filtradas, key=f"categoria_{tipo}")
+
+    usuario_id = st.session_state["usuario"]["id"]
 
     with st.form("form_lancamento"):
         description = st.text_input("Descrição")
@@ -36,7 +37,9 @@ def render_adicionar_lancamento():
         submitted = st.form_submit_button("Adicionar")
 
         if submitted:
+            # Lançamento principal
             insert_transaction(
+                usuario_id,
                 str(date),
                 tipo,
                 category,
@@ -47,11 +50,13 @@ def render_adicionar_lancamento():
                 parcelas,
             )
 
+            # Lançamentos recorrentes
             if recorrente:
                 data_base = datetime.strptime(str(date), "%Y-%m-%d")
                 for i in range(1, parcelas):
                     nova_data = data_base + relativedelta(months=i)
                     insert_transaction(
+                        usuario_id,
                         nova_data.strftime("%Y-%m-%d"),
                         tipo,
                         category,
