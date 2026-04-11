@@ -15,7 +15,10 @@ Este projeto foi desenvolvido com foco em **usabilidade**, **clareza** e **organ
 
 - **Streamlit** como interface principal  
 - **SQLite** como banco de dados local  
-- Arquitetura modular para facilitar manutenção e expansão  
+- Arquitetura modular para facilitar manutenção e expansão
+
+ <img width="1087" height="187" alt="Untitled-2026-04-11-0753" src="https://github.com/user-attachments/assets/f2aa375b-0486-4c6e-a3be-8b413d6ad5fc" />
+
 
 A aplicação oferece um fluxo completo de autenticação:
 
